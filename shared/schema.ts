@@ -45,6 +45,11 @@ export const uploadRequestSchema = z.object({
       "Please provide a valid Discord webhook URL")
 });
 
+// Schema for API file upload (no webhook URL required)
+export const apiUploadRequestSchema = z.object({
+  fileUrl: z.string().url("Please provide a valid URL")
+});
+
 // Type for front-end upload history
 export interface UploadHistoryItem {
   id: number;
