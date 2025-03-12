@@ -7,7 +7,7 @@ This application allows you to upload files (from URLs or local files) directly 
 import requests
 
 # Replace with your actual API endpoint
-API_URL = "https://your-app-url.replit.app/api/webhook/upload"
+API_URL = "https://webhook-og7v.onrender.com/api/webhook/upload"
 
 # The file URL you want to upload
 file_url = "https://example.com/path/to/file.jpg"
@@ -31,7 +31,7 @@ import requests
 import os
 
 # Replace with your actual API endpoint
-API_URL = "https://your-app-url.replit.app/api/webhook/upload"
+API_URL = "https://webhook-og7v.onrender.com/api/webhook/upload"
 
 # The local file you want to upload
 file_path = "/path/to/your/local/file.jpg"
@@ -104,10 +104,10 @@ If the application is deployed, you can specify the API URL:
 
 ```bash
 # For URL-based upload
-python discord_file_uploader.py https://example.com/image.jpg --api https://your-app-url.onrender.com/api/webhook/upload
+python discord_file_uploader.py https://example.com/image.jpg --api https://webhook-og7v.onrender.com/api/webhook/upload
 
 # For local file upload
-python discord_file_uploader.py /path/to/your/local/file.jpg --api https://your-app-url.onrender.com/api/webhook/upload
+python discord_file_uploader.py /path/to/your/local/file.jpg --api https://webhook-og7v.onrender.com/api/webhook/upload
 ```
 
 ## Deployment to Render.com
@@ -174,7 +174,7 @@ This application is configured for easy deployment to Render.com:
 import requests
 
 # Replace with your actual API endpoint if deployed
-API_URL = "https://your-app-url.onrender.com/api/webhook/upload"
+API_URL = "https://webhook-og7v.onrender.com/api/webhook/upload"
 
 # OPTION 1: For uploading a file from a URL
 file_url = "https://example.com/path/to/file.jpg"  # Replace with your actual URL
@@ -199,7 +199,7 @@ import requests
 import os
 
 # Replace with your actual API endpoint if deployed
-API_URL = "https://your-app-url.onrender.com/api/webhook/upload"
+API_URL = "https://webhook-og7v.onrender.com/api/webhook/upload"
 
 # OPTION 2: For uploading a file from your local computer
 file_path = "/path/to/your/local/file.jpg"  # Replace with your actual local file path
@@ -261,7 +261,7 @@ python discord_file_uploader.py /path/to/your/file.jpg
 python discord_file_uploader.py https://example.com/path/to/file.jpg
 
 # Use a custom API endpoint (if deployed)
-python discord_file_uploader.py your_file.png --api https://your-app-url.onrender.com/api/webhook/upload
+python discord_file_uploader.py your_file.png --api https://webhook-og7v.onrender.com/api/webhook/upload
 ```
 
 The script will automatically detect whether you're uploading a local file or a URL, and handle it accordingly.
