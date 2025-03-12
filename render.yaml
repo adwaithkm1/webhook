@@ -1,8 +1,9 @@
+
 services:
   - type: web
     name: discord-file-uploader
     env: node
-    buildCommand: npm install
+    buildCommand: npm install && npm run build
     startCommand: npm start
     envVars:
       - key: DISCORD_WEBHOOK_URL

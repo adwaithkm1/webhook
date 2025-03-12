@@ -56,7 +56,7 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // Use PORT from env for services like Render, or default to 5000
+  // Use PORT from env for services like Render, or default to a dynamic port
   // this serves both the API and the client
   const port = process.env.PORT ? parseInt(process.env.PORT) : 0; // Use port 0 to find an available port
   server.listen({
@@ -65,6 +65,6 @@ app.use((req, res, next) => {
   }, () => {
     const address = server.address();
     const actualPort = typeof address === 'object' && address ? address.port : port;
-    log(`serving on port ${actualPort}`);
+    log(`Server running at http://0.0.0.0:${actualPort}`);
   });
 })();
