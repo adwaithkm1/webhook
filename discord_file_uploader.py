@@ -67,8 +67,26 @@ if __name__ == "__main__":
     # Use the provided API URL or default to localhost
     api_url = args.api if args.api else "http://localhost:5000/api/webhook/upload"
     
+    print("="*60)
+    print("Discord File Uploader")
+    print("="*60)
+    print(f"API Endpoint: {api_url}")
+    
+    # Determine if the input is a file path or URL
+    path = Path(args.file_path)
+    if path.exists() and path.is_file():
+        print(f"Upload Type: Local File")
+        print(f"File Path: {path.absolute()}")
+        print(f"File Size: {path.stat().st_size / 1024:.2f} KB")
+    else:
+        print(f"Upload Type: URL")
+        print(f"URL: {args.file_path}")
+    print("-"*60)
+    
     # Upload the file
     result = upload_file_to_discord(args.file_path, api_url)
     
     # Print the result
+    print("Response:")
     print(json.dumps(result, indent=2))
+    print("="*60)

@@ -1,10 +1,66 @@
 # Discord Webhook File Uploader
 
-This application allows you to upload files from URLs directly to a Discord channel using a pre-configured webhook URL.
+This application allows you to upload files (from URLs or local files) directly to a Discord channel using a pre-configured webhook URL.
+
+### Method 1: Upload from URL
+```python
+import requests
+
+# Replace with your actual API endpoint
+API_URL = "https://your-app-url.replit.app/api/webhook/upload"
+
+# The file URL you want to upload
+file_url = "https://example.com/path/to/file.jpg"
+
+# Make the request
+response = requests.post(
+    API_URL,
+    json={"fileUrl": file_url}
+)
+
+# Check the response
+if response.status_code == 200:
+    print("Success:", response.json())
+else:
+    print("Error:", response.status_code, response.text)
+```
+
+### Method 2: Upload from Local File
+```python
+import requests
+import os
+
+# Replace with your actual API endpoint
+API_URL = "https://your-app-url.replit.app/api/webhook/upload"
+
+# The local file you want to upload
+file_path = "/path/to/your/local/file.jpg"
+
+# Open the file and create a multipart form request
+with open(file_path, 'rb') as file:
+    files = {'file': file}
+    response = requests.post(API_URL, files=files)
+
+# Check the response
+if response.status_code == 200:
+    print("Success:", response.json())
+else:
+    print("Error:", response.status_code, response.text)
+```
+
+### Command-Line Usage
+```bash
+# Upload a local file
+python discord_file_uploader.py /path/to/your/local/file.jpg
+
+# Upload a file from a URL
+python discord_file_uploader.py https://example.com/path/to/file.jpg
+```
 
 ## Features
 
 - Upload files from any public URL to Discord
+- Upload local files directly from your computer
 - Pre-configured webhook (no UI configuration needed)
 - Simple API endpoint for programmatic uploads
 - Python script included for easy integration
@@ -120,13 +176,13 @@ import requests
 # Replace with your actual API endpoint if deployed
 API_URL = "https://your-app-url.onrender.com/api/webhook/upload"
 
-# The file URL you want to upload
-file_url = "https://example.com/path/to/file.jpg"
+# OPTION 1: For uploading a file from a URL
+file_url = "https://example.com/path/to/file.jpg"  # Replace with your actual URL
 
-# Make the request
+# Make the request for URL-based upload
 response = requests.post(
     API_URL,
-    json={"fileUrl": file_url}
+    json={"fileUrl": file_url}  # JSON payload for URL-based upload
 )
 
 # Check the response
@@ -140,23 +196,31 @@ else:
 
 ```python
 import requests
+import os
 
 # Replace with your actual API endpoint if deployed
 API_URL = "https://your-app-url.onrender.com/api/webhook/upload"
 
-# The local file you want to upload
-file_path = "/path/to/your/local/file.jpg"
+# OPTION 2: For uploading a file from your local computer
+file_path = "/path/to/your/local/file.jpg"  # Replace with your actual local file path
 
-# Open the file and create a multipart form request
-with open(file_path, 'rb') as file:
-    files = {'file': file}
-    response = requests.post(API_URL, files=files)
-
-# Check the response
-if response.status_code == 200:
-    print("Success:", response.json())
+# Verify the file exists
+if not os.path.exists(file_path):
+    print(f"Error: File not found at {file_path}")
 else:
-    print("Error:", response.status_code, response.text)
+    # Open the file and create a multipart form request
+    with open(file_path, 'rb') as file:
+        # Note: 'file' is the form field name expected by the server
+        files = {'file': (os.path.basename(file_path), file)}
+        
+        # Make the request for local file upload
+        response = requests.post(API_URL, files=files)  # Multipart form for local files
+    
+        # Check the response
+        if response.status_code == 200:
+            print("Success:", response.json())
+        else:
+            print("Error:", response.status_code, response.text)
 ```
 
 ## Limitations
@@ -164,6 +228,17 @@ else:
 - Maximum file size is 8MB (Discord limitation)
 - Only supports files that Discord can display/handle
 - When using URL-based upload, the file must be accessible via a public URL
+
+## Supported File Types
+
+- Images (.jpg, .png, .gif)
+- Documents (.pdf, .doc, .txt)
+- Media (.mp3, .mp4)
+- Archives (.zip)
+
+## Note
+
+This service uses a pre-configured Discord webhook URL set on the server. There is no need to configure the webhook URL through the UI.
 
 ## Troubleshooting
 
@@ -173,3 +248,20 @@ If you encounter any issues:
 2. For local file uploads, ensure you have read permissions for the file
 3. Check if the Discord webhook URL is correctly configured
 4. Ensure the file size is under 8MB
+
+## Command-Line Usage
+
+The included Python script can be used as a command-line tool for quick file uploads:
+
+```bash
+# Upload a local file
+python discord_file_uploader.py /path/to/your/file.jpg
+
+# Upload a file from a URL
+python discord_file_uploader.py https://example.com/path/to/file.jpg
+
+# Use a custom API endpoint (if deployed)
+python discord_file_uploader.py your_file.png --api https://your-app-url.onrender.com/api/webhook/upload
+```
+
+The script will automatically detect whether you're uploading a local file or a URL, and handle it accordingly.
