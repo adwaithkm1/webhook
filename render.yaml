@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: discord-file-uploader
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: DISCORD_WEBHOOK_URL
+        sync: false # This requires manual configuration in Render dashboard
+    plan: free # or specify a different plan as needed

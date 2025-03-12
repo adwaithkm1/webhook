@@ -45,8 +45,28 @@ python discord_file_uploader.py https://example.com/image.jpg
 If the application is deployed, you can specify the API URL:
 
 ```bash
-python discord_file_uploader.py https://example.com/image.jpg --api https://your-app-url.replit.app/api/webhook/upload
+python discord_file_uploader.py https://example.com/image.jpg --api https://your-app-url.onrender.com/api/webhook/upload
 ```
+
+## Deployment to Render.com
+
+This application is configured for easy deployment to Render.com:
+
+1. Push this repository to GitHub, GitLab, or Bitbucket.
+
+2. Log in to your Render.com account and click "New Web Service".
+
+3. Connect your repository and select it.
+
+4. Render will automatically detect the configuration from `render.yaml`.
+
+5. Important: Add your `DISCORD_WEBHOOK_URL` as an environment variable in the Render dashboard:
+   - Go to your web service dashboard
+   - Click "Environment" in the left panel
+   - Add a key `DISCORD_WEBHOOK_URL` with your Discord webhook URL as the value
+   - Click "Save Changes"
+
+6. Render will automatically build and deploy your service.
 
 ## API Reference
 
@@ -77,7 +97,7 @@ python discord_file_uploader.py https://example.com/image.jpg --api https://your
 import requests
 
 # Replace with your actual API endpoint if deployed
-API_URL = "https://your-app-url.replit.app/api/webhook/upload"
+API_URL = "https://your-app-url.onrender.com/api/webhook/upload"
 
 # The file URL you want to upload
 file_url = "https://example.com/path/to/file.jpg"
