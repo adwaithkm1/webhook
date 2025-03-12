@@ -58,12 +58,13 @@ app.use((req, res, next) => {
 
   // Use PORT from env for services like Render, or default to 5000
   // this serves both the API and the client
-  const port = process.env.PORT ? parseInt(process.env.PORT) : 5000;
+  const port = process.env.PORT ? parseInt(process.env.PORT) : 0; // Use port 0 to find an available port
   server.listen({
     port,
     host: "0.0.0.0",
-    reusePort: true,
   }, () => {
-    log(`serving on port ${port}`);
+    const address = server.address();
+    const actualPort = typeof address === 'object' && address ? address.port : port;
+    log(`serving on port ${actualPort}`);
   });
 })();
