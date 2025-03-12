@@ -5,88 +5,64 @@ import argparse
 import os
 from pathlib import Path
 
-def upload_file_to_discord(file_path, api_url=None):
-    """
-    Upload a file to Discord via the webhook API
-    
-    Args:
-        file_path (str): Path to local file or URL of the file
-        api_url (str, optional): API endpoint URL. Defaults to localhost:5000.
-    
-    Returns:
-        dict: API response
-    """
-    if api_url is None:
-        # Default to the local development server
-        api_url = "http://localhost:5000/api/webhook/upload"
-    
-    # Check if file_path is a local file
-    path = Path(file_path)
-    
-    if path.exists() and path.is_file():
-        # For local files, use multipart form data
-        print(f"Uploading local file: {file_path} to Discord...")
-        try:
-            with open(file_path, 'rb') as file:
-                response = requests.post(
-                    api_url,
-                    files={'file': (path.name, file, 'application/octet-stream')},
-                )
-        except Exception as e:
-            print(f"Error reading file: {str(e)}")
-            return {"success": False, "message": str(e)}
+def is_url(string):
+    return string.startswith(('http://', 'https://'))
+
+def upload_from_url(api_url, file_url):
+    """Upload a file from a URL to Discord via the webhook API"""
+    try:
+        response = requests.post(
+            api_url,
+            json={"fileUrl": file_url}
+        )
+        return response
+    except Exception as e:
+        print(f"Error uploading from URL: {e}")
+        return None
+
+def upload_from_local(api_url, file_path):
+    """Upload a local file to Discord via the webhook API"""
+    try:
+        if not os.path.exists(file_path):
+            print(f"Error: File not found at {file_path}")
+            return None
+
+        with open(file_path, 'rb') as file:
+            files = {'file': (os.path.basename(file_path), file)}
+            response = requests.post(api_url, files=files)
+            return response
+    except Exception as e:
+        print(f"Error uploading local file: {e}")
+        return None
+
+def main():
+    parser = argparse.ArgumentParser(description='Upload files to Discord via webhook')
+    parser.add_argument('file_path_or_url', help='Path to local file or URL to upload')
+    parser.add_argument('--api', default='http://localhost:5000/api/webhook/upload',
+                        help='API URL (defaults to http://localhost:5000/api/webhook/upload)')
+
+    args = parser.parse_args()
+
+    file_path_or_url = args.file_path_or_url
+    api_url = args.api
+
+    print(f"Using API endpoint: {api_url}")
+
+    # Determine if it's a URL or local file path
+    if is_url(file_path_or_url):
+        print(f"Uploading from URL: {file_path_or_url}")
+        response = upload_from_url(api_url, file_path_or_url)
     else:
-        # For URLs, use JSON payload
-        print(f"Uploading file from URL: {file_path} to Discord...")
-        try:
-            response = requests.post(
-                api_url,
-                json={"fileUrl": file_path},
-                headers={"Content-Type": "application/json"}
-            )
-        except Exception as e:
-            print(f"Error with URL: {str(e)}")
-            return {"success": False, "message": str(e)}
-    
-    # Check if the request was successful
-    if response.status_code == 200:
-        print("Success! File uploaded to Discord.")
-        return response.json()
+        print(f"Uploading local file: {file_path_or_url}")
+        response = upload_from_local(api_url, file_path_or_url)
+
+    if response:
+        if response.status_code == 200:
+            print("Success:", response.json())
+        else:
+            print(f"Error: {response.status_code} - {response.text}")
     else:
-        print(f"Error: {response.status_code}")
-        print(f"Response: {response.text}")
-        return {"success": False, "message": response.text}
+        print("Upload failed due to an error")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Upload a file or URL to Discord')
-    parser.add_argument('file_path', help='Path to local file or URL of the file to upload')
-    parser.add_argument('--api', help='API endpoint URL (default: http://localhost:5000/api/webhook/upload)')
-    
-    args = parser.parse_args()
-    
-    # Use the provided API URL or default to localhost
-    api_url = args.api if args.api else "http://localhost:5000/api/webhook/upload"
-    
-    print("="*60)
-    print("Discord File Uploader")
-    print("="*60)
-    print(f"API Endpoint: {api_url}")
-    
-    # Determine if the input is a file path or URL
-    path = Path(args.file_path)
-    if path.exists() and path.is_file():
-        print(f"Upload Type: Local File")
-        print(f"File Path: {path.absolute()}")
-        print(f"File Size: {path.stat().st_size / 1024:.2f} KB")
-    else:
-        print(f"Upload Type: URL")
-        print(f"URL: {args.file_path}")
-    print("-"*60)
-    
-    # Upload the file
-    result = upload_file_to_discord(args.file_path, api_url)
-    
-    # Print the result
-    print("Response:")
-    print(json.dumps(result, indent=2))
-    print("="*60)
+    main()

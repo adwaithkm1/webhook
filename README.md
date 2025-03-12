@@ -110,9 +110,11 @@ python discord_file_uploader.py https://example.com/image.jpg --api https://webh
 python discord_file_uploader.py /path/to/your/local/file.jpg --api https://webhook-og7v.onrender.com/api/webhook/upload
 ```
 
-## Deployment to Render.com
+## Deployment Options
 
-This application is configured for easy deployment to Render.com:
+### Option 1: Deploy to Render.com
+
+This application is already configured for easy deployment to Render.com using the included `render.yaml` file:
 
 1. Push this repository to GitHub, GitLab, or Bitbucket.
 
@@ -129,6 +131,24 @@ This application is configured for easy deployment to Render.com:
    - Click "Save Changes"
 
 6. Render will automatically build and deploy your service.
+
+### Option 2: Deploy on Replit
+
+This application can also be deployed directly on Replit:
+
+1. In your Replit project, click the "Deployment" tab at the top of the screen.
+
+2. Select the appropriate deployment tier.
+
+3. Add your `DISCORD_WEBHOOK_URL` as an environment secret:
+   - Go to the "Secrets" tool in the sidebar
+   - Add a key `DISCORD_WEBHOOK_URL` with your Discord webhook URL as the value
+
+4. Deploy with the following settings:
+   - Build command: `npm run build`
+   - Run command: `npm start`
+
+5. Click "Deploy" to make your app available at your Replit app URL.
 
 ## API Reference
 
